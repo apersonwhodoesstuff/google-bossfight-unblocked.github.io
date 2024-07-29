@@ -1,0 +1,813 @@
+<html><head><base href="https://websim.ai/google/"><title>Google</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding-top: 15%;
+  transition: padding-top 3s, background-color 0.5s;
+  background-color: white;
+  margin: 0;
+  overflow: hidden;
+  cursor: none;
+}
+body.fighting {
+  padding-top: 40vh;
+}
+body.pulsing {
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0% { background-color: white; }
+  50% { background-color: #e0e0e0; }
+  100% { background-color: white; }
+}
+.logo {
+  font-size: 5em;
+  font-weight: bold;
+  margin-bottom: 20px;
+  transition: margin-bottom 3s;
+  position: relative;
+}
+body.fighting .logo {
+  margin-bottom: 0;
+}
+.logo span:nth-child(1) { color: #4285F4; }
+.logo span:nth-child(2) { color: #EA4335; }
+.logo span:nth-child(3) { color: #FBBC05; }
+.logo span:nth-child(4) { color: #4285F4; }
+.logo span:nth-child(5) { color: #34A853; }
+.logo span:nth-child(6) { color: #EA4335; }
+.logo.vibrate {
+  animation: vibrate 0.1s linear infinite;
+}
+@keyframes vibrate {
+  0% { transform: translate(0); }
+  25% { transform: translate(-1px, 1px); }
+  50% { transform: translate(1px, -1px); }
+  75% { transform: translate(-1px, -1px); }
+  100% { transform: translate(1px, 1px); }
+}
+.logo.spin {
+  animation: spin 0.1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.search-container {
+  transition: opacity 2s;
+}
+body.fighting .search-container {
+  opacity: 0;
+  pointer-events: none;
+}
+input[type="text"] {
+  width: 500px;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 24px;
+  border: 1px solid #dfe1e5;
+  outline: none;
+}
+.buttons {
+  margin-top: 20px;
+}
+button {
+  background-color: #f8f9fa;
+  border: 1px solid #f8f9fa;
+  border-radius: 4px;
+  color: #3c4043;
+  font-family: arial,sans-serif;
+  font-size: 14px;
+  margin: 11px 4px;
+  padding: 0 16px;
+  line-height: 27px;
+  height: 36px;
+  min-width: 54px;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+}
+button[name="btnI"] {
+  background-color: #EA4335;
+  border-color: #EA4335;
+  color: white;
+  font-weight: bold;
+}
+button[name="btnI"]:hover {
+  background-color: #D33C30;
+  border-color: #D33C30;
+}
+.timer {
+  font-size: 3em;
+  color: #EA4335;
+  margin-top: 20px;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+body.fighting .timer {
+  opacity: 1;
+}
+.healthbar {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 200px;
+  height: 20px;
+  background-color: #ddd;
+  border: 2px solid #000;
+  display: none;
+}
+.healthbar-fill {
+  width: 100%;
+  height: 100%;
+  background-color: #4CAF50;
+  transition: width 0.5s;
+}
+.healthbar-label {
+  position: absolute;
+  top: -20px;
+  left: 0;
+  font-weight: bold;
+}
+body.fighting .healthbar {
+  display: block;
+}
+.binary-ring {
+  position: absolute;
+  pointer-events: none;
+}
+.binary-bit {
+  position: absolute;
+  font-weight: bold;
+  pointer-events: auto;
+  font-size: 14px;
+  color: #00f0ff;
+  text-shadow: 0 0 5px #00f0ff;
+  transition: transform 10s linear;
+}
+#cursor {
+  position: fixed;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 255, 0.5);
+  pointer-events: none;
+  z-index: 9999;
+}
+.warning-circle {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #00f0ff;
+  box-shadow: 0 0 10px #00f0ff;
+  animation: flash 0.5s infinite alternate;
+}
+@keyframes flash {
+  from { opacity: 0.2; }
+  to { opacity: 1; }
+}
+.flying-o {
+  position: absolute;
+  font-size: 20px;
+  color: #EA4335;
+  pointer-events: none;
+}
+.text-prompt {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 300px;
+  height: 150px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #00ff00;
+  border: 2px solid #00ff00;
+  border-radius: 10px;
+  padding: 10px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  display: none;
+  overflow-y: auto;
+}
+.text-prompt-content {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.search-attack {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 24px;
+  border: 1px solid #dfe1e5;
+  outline: none;
+  opacity: 0;
+  transition: opacity 0.5s, left 0.5s;
+}
+.music-note {
+  position: absolute;
+  font-size: 24px;
+  pointer-events: none;
+  animation: fallDown 5s linear;
+}
+@keyframes fallDown {
+  0% { transform: translateY(-50px); }
+  100% { transform: translateY(calc(100vh + 50px)); }
+}
+.hack-progress {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 300px;
+  height: 30px;
+  background-color: #ddd;
+  border: 2px solid #000;
+  display: none;
+}
+.hack-progress-fill {
+  width: 0%;
+  height: 100%;
+  background-color: #4CAF50;
+  transition: width 0.5s;
+}
+.hack-progress-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #000;
+}
+body.fighting .hack-progress {
+  display: block;
+}
+.win-message, .game-over-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3em;
+  color: #4CAF50;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 10px;
+  display: none;
+}
+.game-over-message {
+  color: #EA4335;
+}
+.error-popup {
+  position: absolute;
+  background-color: #ff4444;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  animation: vibrate 0.1s linear infinite;
+  z-index: 1000;
+  pointer-events: none;
+}
+.joystick-base {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 100px;
+  height: 100px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  z-index: 1000;
+}
+.joystick-stick {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  width: 50px;
+  height: 50px;
+  background-color: rgba(0, 0, 255, 0.5);
+  border-radius: 50%;
+}
+</style>
+</head>
+<body>
+<div id="cursor"></div>
+<div class="logo">
+  <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
+</div>
+<div class="timer">3</div>
+<div class="search-container">
+  <form action="https://websim.ai/google/search">
+    <input type="text" name="q" autofocus>
+    <div class="buttons">
+      <button type="submit">Google Search</button>
+      <button type="submit" name="btnI">Fight!</button>
+    </div>
+  </form>
+</div>
+<div class="healthbar">
+  <div class="healthbar-label">HP</div>
+  <div class="healthbar-fill"></div>
+</div>
+<div class="text-prompt">
+  <div class="text-prompt-content"></div>
+</div>
+<input type="text" class="search-attack" readonly>
+<div class="hack-progress">
+  <div class="hack-progress-fill"></div>
+  <div class="hack-progress-label">Hacking the mainframe... 0%</div>
+</div>
+<div class="win-message">You have successfully hacked the mainframe!</div>
+<div class="game-over-message">Game Over! Returning to main menu...</div>
+<div class="joystick-base">
+  <div class="joystick-stick"></div>
+</div>
+<script>
+let playerHP = 100;
+let isFighting = false;
+let cursorPos = { x: 0, y: 0 };
+let activeAttacks = new Set();
+let hackProgress = 0;
+let hackInterval;
+let attackInterval;
+let errorPopups = [];
+let popupChaseInterval;
+
+document.querySelector('form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  let query = document.querySelector('input[name="q"]').value;
+  let isFight = e.submitter.name === 'btnI';
+  
+  if (isFight) {
+    startFight();
+  } else {
+    console.log("Search query:", query);
+  }
+});
+
+function startFight() {
+  document.body.classList.add('fighting');
+  let timer = document.querySelector('.timer');
+  let count = 3;
+  
+  document.querySelector('.text-prompt').style.display = 'block';
+  appendToPrompt('> Initializing fight sequence...\n');
+  
+  setTimeout(() => {
+    let countDown = setInterval(() => {
+      timer.textContent = count;
+      appendToPrompt(`> Countdown: ${count}\n`);
+      count--;
+      if (count < 0) {
+        clearInterval(countDown);
+        timer.textContent = "Fight!";
+        appendToPrompt('> Fight!\n');
+        setTimeout(() => {
+          timer.textContent = "";
+          document.body.classList.add('pulsing');
+          isFighting = true;
+          startAttacking();
+          startHacking();
+          startErrorPopups();
+          startPopupChase();
+        }, 1000);
+      }
+    }, 1000);
+  }, 3000);
+}
+
+function startAttacking() {
+  attackInterval = setInterval(() => {
+    if (Math.random() < 0.3) {  // 30% chance to start a new attack every second
+      const attackType = Math.random();
+      if (attackType < 0.33 && !activeAttacks.has('binary')) {
+        binaryAttack();
+      } else if (attackType < 0.66 && !activeAttacks.has('rolling')) {
+        rollingAttack();
+      } else if (!activeAttacks.has('search')) {
+        searchAttack();
+      }
+    }
+  }, 1000);
+}
+
+function startHacking() {
+  hackInterval = setInterval(() => {
+    hackProgress += (100 / 180);
+    if (hackProgress >= 100) {
+      hackProgress = 100;
+      clearInterval(hackInterval);
+      win();
+    }
+    updateHackProgress();
+  }, 1000);
+}
+
+function startErrorPopups() {
+  setInterval(() => {
+    if (isFighting) {
+      createErrorPopup();
+    }
+  }, 30000);
+}
+
+function createErrorPopup() {
+  const popup = document.createElement('div');
+  popup.className = 'error-popup';
+  popup.textContent = "ERROR - Do not touch me or I'll hurt you >:D";
+  
+  // Position the popup randomly on the screen
+  let x = Math.random() * (window.innerWidth - 200);
+  let y = Math.random() * (window.innerHeight - 100);
+  
+  popup.style.left = `${x}px`;
+  popup.style.top = `${y}px`;
+  
+  document.body.appendChild(popup);
+  errorPopups.push(popup);
+}
+
+function startPopupChase() {
+  popupChaseInterval = setInterval(() => {
+    if (isFighting) {
+      errorPopups.forEach(popup => {
+        const dx = cursorPos.x - parseInt(popup.style.left);
+        const dy = cursorPos.y - parseInt(popup.style.top);
+        const distance = Math.sqrt(dx*dx + dy*dy);
+        if (distance > 5) {
+          const speed = 2; // Adjust this value to change the speed of the popups
+          const moveX = (dx / distance) * speed;
+          const moveY = (dy / distance) * speed;
+          popup.style.left = `${parseInt(popup.style.left) + moveX}px`;
+          popup.style.top = `${parseInt(popup.style.top) + moveY}px`;
+        }
+      });
+    }
+  }, 50);
+}
+
+function updateHackProgress() {
+  const progressBar = document.querySelector('.hack-progress-fill');
+  const progressLabel = document.querySelector('.hack-progress-label');
+  progressBar.style.width = `${hackProgress}%`;
+  progressLabel.textContent = `Hacking the mainframe... ${Math.round(hackProgress)}%`;
+}
+
+function win() {
+  isFighting = false;
+  activeAttacks.clear();
+  clearInterval(attackInterval);
+  clearInterval(popupChaseInterval);
+  
+  const winMessage = document.querySelector('.win-message');
+  winMessage.style.display = 'block';
+  
+  appendToPrompt('> Mainframe hacked successfully!\n');
+  appendToPrompt('> Returning to main menu...\n');
+  
+  errorPopups.forEach(popup => popup.remove());
+  errorPopups = [];
+  
+  setTimeout(() => {
+    resetGame();
+  }, 3000);
+}
+
+function gameOver() {
+  isFighting = false;
+  activeAttacks.clear();
+  clearInterval(hackInterval);
+  clearInterval(attackInterval);
+  clearInterval(popupChaseInterval);
+  errorPopups.forEach(popup => popup.remove());
+  errorPopups = [];
+  
+  const gameOverMessage = document.querySelector('.game-over-message');
+  gameOverMessage.style.display = 'block';
+
+  appendToPrompt('> Game Over!\n');
+  appendToPrompt('> Returning to main menu...\n');
+
+  setTimeout(() => {
+    resetGame();
+    gameOverMessage.style.display = 'none';
+  }, 3000);
+}
+
+function resetGame() {
+  document.body.classList.remove('fighting', 'pulsing');
+  document.querySelector('.search-container').style.opacity = '1';
+  document.querySelector('.healthbar').style.display = 'none';
+  document.querySelector('.hack-progress').style.display = 'none';
+  document.querySelector('.text-prompt').style.display = 'none';
+  document.querySelector('.win-message').style.display = 'none';
+  document.querySelector('.game-over-message').style.display = 'none';
+  
+  // Reset game state
+  playerHP = 100;
+  hackProgress = 0;
+  updateHealthBar();
+  updateHackProgress();
+}
+
+function binaryAttack() {
+  if (activeAttacks.has('binary')) return;
+  activeAttacks.add('binary');
+
+  const logo = document.querySelector('.logo');
+
+  appendToPrompt('> Activating binary rings...\n');
+  logo.classList.add('vibrate');
+
+  setTimeout(() => {
+    logo.classList.remove('vibrate');
+    
+    const warningCircles = [];
+    for (let i = 0; i < 6; i++) {
+      const circle = document.createElement('div');
+      circle.className = 'warning-circle';
+      const x = Math.random() * (window.innerWidth - 50);
+      const y = Math.random() * (window.innerHeight - 50);
+      circle.style.left = `${x}px`;
+      circle.style.top = `${y}px`;
+      document.body.appendChild(circle);
+      warningCircles.push({circle, x: x + 25, y: y + 25});
+    }
+    
+    setTimeout(() => {
+      warningCircles.forEach(({circle, x, y}) => {
+        circle.remove();
+        createBinaryRing(x, y);
+      });
+      activeAttacks.delete('binary');
+    }, 2000);
+  }, 2000);
+}
+
+function rollingAttack() {
+  if (activeAttacks.has('rolling')) return;
+  activeAttacks.add('rolling');
+
+  const logo = document.querySelector('.logo');
+
+  appendToPrompt('> Rolling out...\n');
+
+  setTimeout(() => {
+    logo.classList.add('spin');
+    
+    let oCount = 0;
+    const spawnO = () => {
+      if (oCount < 50 && isFighting) {
+        const o = document.createElement('div');
+        o.className = 'flying-o';
+        o.textContent = 'o';
+        o.style.left = '50%';
+        o.style.top = '50%';
+        document.body.appendChild(o);
+        
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 1 + Math.random() * 2;
+        let t = 0;
+        
+        const animate = () => {
+          if (!isFighting) {
+            o.remove();
+            return;
+          }
+          t += 0.02;
+          const x = Math.cos(angle) * t * speed * 100;
+          const y = Math.sin(angle) * t * speed * 100 + 0.5 * 98 * t * t;
+          o.style.transform = `translate(${x}px, ${y}px)`;
+          
+          if (isColliding(o, cursorPos)) {
+            playerHP -= 10;
+            updateHealthBar();
+            o.remove();
+          } else if (t < 5) {
+            requestAnimationFrame(animate);
+          } else {
+            o.remove();
+          }
+        };
+        
+        requestAnimationFrame(animate);
+        oCount++;
+        setTimeout(spawnO, 100);
+      } else {
+        setTimeout(() => {
+          logo.classList.remove('spin');
+          activeAttacks.delete('rolling');
+        }, 1000);
+      }
+    };
+    
+    spawnO();
+  }, 2000);
+}
+
+function searchAttack() {
+  if (activeAttacks.has('search')) return;
+  activeAttacks.add('search');
+
+  appendToPrompt('> Searching the web...\n');
+
+  const searchBar = document.querySelector('.search-attack');
+  searchBar.style.opacity = '1';
+  searchBar.value = '';
+
+  const text = 'Relaxing Music';
+  let index = 0;
+
+  const typeText = setInterval(() => {
+    if (index < text.length && isFighting) {
+      searchBar.value += text[index];
+      index++;
+    } else {
+      clearInterval(typeText);
+      setTimeout(() => {
+        if (isFighting) {
+          searchBar.style.opacity = '0';
+          rainMusicNotes();
+        } else {
+          activeAttacks.delete('search');
+        }
+      }, 500);
+    }
+  }, 100);
+}
+
+function rainMusicNotes() {
+  let noteCount = 0;
+  const spawnNote = () => {
+    if (noteCount < 50 && isFighting) {
+      const note = document.createElement('div');
+      note.className = 'music-note';
+      note.textContent = '♪';
+      note.style.left = `${Math.random() * 100}%`;
+      note.style.top = '0';
+      note.style.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+      document.body.appendChild(note);
+      
+      note.addEventListener('animationend', () => {
+        note.remove();
+      });
+      
+      const checkCollision = setInterval(() => {
+        if (!isFighting) {
+          clearInterval(checkCollision);
+          note.remove();
+          return;
+        }
+        if (isColliding(note, cursorPos)) {
+          playerHP -= 10;
+          updateHealthBar();
+          note.remove();
+          clearInterval(checkCollision);
+        }
+      }, 100);
+      
+      noteCount++;
+      setTimeout(spawnNote, 100);
+    } else {
+      setTimeout(() => {
+        activeAttacks.delete('search');
+      }, 5000);
+    }
+  };
+
+  spawnNote();
+}
+
+function isColliding(element, point) {
+  const rect = element.getBoundingClientRect();
+  return (
+    point.x >= rect.left &&
+    point.x <= rect.right &&
+    point.y >= rect.top &&
+    point.y <= rect.bottom
+  );
+}
+
+function createBinaryRing(x, y) {
+  const ring = document.createElement('div');
+  ring.className = 'binary-ring';
+  ring.style.left = `${x}px`;
+  ring.style.top = `${y}px`;
+  document.body.appendChild(ring);
+
+  const numBits = 16;
+  for (let i = 0; i < numBits; i++) {
+    const bit = document.createElement('div');
+    bit.className = 'binary-bit';
+    bit.textContent = Math.round(Math.random());
+    const angle = (i / numBits) * 2 * Math.PI;
+    const startRadius = 50 + Math.random() * 50;
+    const endRadius = Math.max(window.innerWidth, window.innerHeight);
+    bit.style.transform = `rotate(${angle}rad) translate(${startRadius}px) rotate(-${angle}rad)`;
+    ring.appendChild(bit);
+    
+    bit.addEventListener('mouseover', () => {
+      if (isFighting) {
+        playerHP -= 10;
+        updateHealthBar();
+        bit.remove();
+      }
+    });
+
+    setTimeout(() => {
+      if (isFighting) {
+        bit.style.transform = `rotate(${angle}rad) translate(${endRadius}px) rotate(-${angle}rad)`;
+      }
+    }, 50);
+
+    setTimeout(() => {
+      bit.remove();
+    }, 10000);
+  }
+
+  setTimeout(() => {
+    ring.remove();
+  }, 10000);
+}
+
+function updateHealthBar() {
+  const healthBar = document.querySelector('.healthbar-fill');
+  healthBar.style.width = `${playerHP}%`;
+  if (playerHP <= 0) {
+    gameOver();
+  }
+}
+
+function appendToPrompt(text) {
+  const promptContent = document.querySelector('.text-prompt-content');
+  promptContent.textContent += text;
+  promptContent.scrollTop = promptContent.scrollHeight;
+}
+
+const cursor = document.getElementById('cursor');
+const joystickBase = document.querySelector('.joystick-base');
+const joystickStick = document.querySelector('.joystick-stick');
+let isJoystickActive = false;
+let joystickCenter = { x: 0, y: 0 };
+
+joystickBase.addEventListener('mousedown', (e) => {
+  isJoystickActive = true;
+  const rect = joystickBase.getBoundingClientRect();
+  joystickCenter = {
+    x: rect.left + rect.width / 2,
+    y: rect.top + rect.height / 2
+  };
+  updateJoystickPosition(e);
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (isJoystickActive) {
+    updateJoystickPosition(e);
+  }
+  cursorPos.x = e.clientX;
+  cursorPos.y = e.clientY;
+  cursor.style.left = cursorPos.x - 16 + 'px';
+  cursor.style.top = cursorPos.y - 16 + 'px';
+
+  // Check collision with error popups
+  errorPopups.forEach(popup => {
+    if (isColliding(popup, cursorPos)) {
+      playerHP -= 5;
+      updateHealthBar();
+    }
+  });
+});
+
+document.addEventListener('mouseup', () => {
+  isJoystickActive = false;
+  joystickStick.style.transform = 'translate(0, 0)';
+});
+
+function updateJoystickPosition(e) {
+  const dx = e.clientX - joystickCenter.x;
+  const dy = e.clientY - joystickCenter.y;
+  const distance = Math.min(50, Math.sqrt(dx * dx + dy * dy));
+  const angle = Math.atan2(dy, dx);
+  const x = Math.cos(angle) * distance;
+  const y = Math.sin(angle) * distance;
+  joystickStick.style.transform = `translate(${x}px, ${y}px)`;
+
+  // Update cursor position based on joystick
+  const cursorSpeed = 5;
+  cursorPos.x += x / 50 * cursorSpeed;
+  cursorPos.y += y / 50 * cursorSpeed;
+  cursorPos.x = Math.max(0, Math.min(window.innerWidth, cursorPos.x));
+  cursorPos.y = Math.max(0, Math.min(window.innerHeight, cursorPos.y));
+  cursor.style.left = cursorPos.x - 16 + 'px';
+  cursor.style.top = cursorPos.y - 16 + 'px';
+}
+</script>
+</body></html>
